@@ -290,10 +290,10 @@
                 <td colspan="35" class="ord_1" style="width:35%">Observaciones</td>
               </tr>
              
-              <tbody id="historial_orden_detalles" class="ord_2" style="text-align: center;font-size: 13px;"></tbody>
+              <tbody id="hist_orden_detalles" class="ord_2" style="text-align: center;font-size: 13px;"></tbody>
             </table>
           </div> 
-          
+           <input type="hidden" id="user_act" value="<?php echo $_SESSION["usuario"];?>">
           <div class="form-group justify-content-between" style="margin: 4px; display: flex;justify-content: space-between;">
 
             <button type="button" class="btn btn-dark" style="margin: 5px;" id="btn_rectificar" data-toggle="modal" data-target="#rectificacionesModal" data-index-number="12314Os"><i class="fas fa-wrench"></i> &nbsp;Rectificar</button>

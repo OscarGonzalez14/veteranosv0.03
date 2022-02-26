@@ -64,7 +64,7 @@ require_once("../config/conexion.php");
     foreach ($detalle_finalizados as $k => $v) {
       
       $codigoOrden = $v->n_orden;
-      $accion = "Finalizar Lab";
+      $accion = "Finalizado Lab";
       $destino = "-";
 
       $sql2 = "update orden_lab set estado_aro='3' where codigo=?;";
@@ -178,7 +178,7 @@ require_once("../config/conexion.php");
     foreach ($detalle_recibidos as $k => $v) {
       
       $codigoOrden = $v->n_orden;
-      $accion = "Recibir Lab";
+      $accion = "Recibido en laboratorio";
       $destino = "A proceso";
 
       $sql2 = "update orden_lab set estado_aro='2' where codigo=?;";
@@ -268,6 +268,15 @@ require_once("../config/conexion.php");
       $sql3->bindValue(1, $codigoOrden);
       $sql3->execute();
     }
+
+      $sql = "insert into acciones_orden values(null,?,?,?,?,?);";
+      $sql=$conectar->prepare($sql);
+      $sql->bindValue(1, $hoy." ".$hora);
+      $sql->bindValue(2, $usuario);
+      $sql->bindValue(3, $codigoOrden);
+      $sql->bindValue(4, $accion);
+      $sql->bindValue(5, $estado);
+      $sql->execute();
   }
   
   public function listarOrdenesRecibidasVeteranos(){

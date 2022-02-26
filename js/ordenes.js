@@ -114,7 +114,7 @@ function create_barcode(){
 //window.onkeydown= space_guardar_orden;
 
 function guardar_orden(){ 
-
+  
   let categoria_lente = "";
   //let categoria_lente = $("#categoria_lente").val();
   let validate = $("#validate").val();
@@ -123,6 +123,7 @@ function guardar_orden(){
   }else{
     categoria_lente = "*";
   }
+
   let genero = $("#genero_pac").val();
   let correlativo_op = $("#correlativo_op").html();
   let paciente = $("#paciente").val();  
@@ -172,8 +173,9 @@ function guardar_orden(){
   let avsc_oi = $("#avsc_oi").val();
   let avfinal_oi= $("#avfinal_oi").val();
   let telefono = $("#telef_pac").val();
-
+  let user = $("#user_act").val();  
   let campos_orden = document.getElementsByClassName('oblig');
+
   if(id_usuario != 1){
   for (let i = 0; i<campos_orden.length; i++) {
    if(campos_orden[i].value=="") {
@@ -206,7 +208,7 @@ function guardar_orden(){
     id_usuario:id_usuario,observaciones_orden:observaciones_orden,dui:dui,od_esferas:od_esferas,od_cilindros:od_cilindros,
     od_eje:od_eje,od_adicion:od_adicion,oi_esferas:oi_esferas,oi_cilindros:oi_cilindros,oi_eje:oi_eje,oi_adicion:oi_adicion,
     tipo_lente:tipo_lente,color_varilla:color_varilla,color_frente:color_frente,imagen:imagen,validate:validate,categoria_lente:categoria_lente,
-    edad:edad,usuario:usuario,ocupacion:ocupacion,avsc:avsc,avfinal:avfinal,avsc_oi:avsc_oi,avfinal_oi:avfinal_oi,telefono:telefono,genero:genero},
+    edad:edad,usuario:usuario,ocupacion:ocupacion,avsc:avsc,avfinal:avfinal,avsc_oi:avsc_oi,avfinal_oi:avfinal_oi,telefono:telefono,genero:genero,user:user},
     cache: false,
     dataType:"json",
    
@@ -344,20 +346,30 @@ function verEditar(codigo,paciente){
     var ob = document.getElementById("order_create_edit");
     ob.classList.remove("btn-block");
     document.getElementById("btn_rectificar").style.display = "flex";
-    historialOrden();
+    historialOrden(codigo);
   }
 
-  function historialOrden(){
+  function historialOrden(codigo){
       let categoriaUser = $("#categoria-usuer-hist").val();
-      
+      console.log(categoriaUser)
       $.ajax({
         url:"../ajax/ordenes.php?op=ver_historial_orden",
         method:"POST",
         cache:false,
-        data: {codigo:codigo,categoria:categoria},
+        data: {codigo:codigo,categoriaUser:categoriaUser},
         dataType:"json",
         success:function(data){
-          console.log(data);
+          $("#hist_orden_detalles").html("");
+          let filas = '';
+          for(var i=0; i<data.length; i++){
+            filas = filas + "<tr id='fila"+i+"'>"+
+            "<td colspan='15' style='width:15%''>"+data[i].fecha_hora+"</td>"+
+            "<td colspan='25' style='width:25%''>"+data[i].usuario+"</td>"+
+            "<td colspan='25' style='width:25%''>"+data[i].accion+"</td>"+
+            "<td colspan='35' style='width:35%''>"+data[i].observaciones+"</td>"+
+            "</tr>";
+          }
+          $("#hist_orden_detalles").html(filas);  
         }//Fin success
       });//Fin ajax
   }
@@ -1430,15 +1442,15 @@ btn_recti.addEventListener("click", () => {
 
 
 function getCorrelativoRectificacion(){
-    $.ajax({
-    url:"../ajax/ordenes.php?op=correlativo_rectificacion",
-    method:"POST",
-    cache:false,
-    dataType:"json",
-    success:function(data){         
-      $("#correlativo_rectificacion").html(data.correlativo);
-    }
-    })
+  $.ajax({
+  url:"../ajax/ordenes.php?op=correlativo_rectificacion",
+  method:"POST",
+  cache:false,
+  dataType:"json",
+  success:function(data){         
+    $("#correlativo_rectificacion").html(data.correlativo);
+  }
+  });
 }
 
 init();

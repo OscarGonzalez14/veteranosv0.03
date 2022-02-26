@@ -63,7 +63,7 @@ require_once("../config/conexion.php");
     barcode('../codigos/' . $codigo . '.png', $codigo, 50, 'horizontal', 'code128', true);
   }
   /////////////   REGISTRAR ORDEN ///////////////////////////////
-  public function registrar_orden($correlativo_op,$paciente,$fecha_creacion,$od_pupilar,$oipupilar,$odlente,$oilente,$marca_aro_orden,$modelo_aro_orden,$horizontal_aro_orden,$vertical_aro_orden,$puente_aro_orden,$id_usuario,$observaciones_orden,$dui,$od_esferas,$od_cilindros,$od_eje,$od_adicion,$oi_esferas,$oi_cilindros,$oi_eje,$oi_adicion,$tipo_lente,$color_varilla,$color_frente,$imagen,$edad,$usuario,$ocupacion,$avsc,$avfinal,$avsc_oi,$avfinal_oi,$telefono,$genero){
+  public function registrar_orden($correlativo_op,$paciente,$fecha_creacion,$od_pupilar,$oipupilar,$odlente,$oilente,$marca_aro_orden,$modelo_aro_orden,$horizontal_aro_orden,$vertical_aro_orden,$puente_aro_orden,$id_usuario,$observaciones_orden,$dui,$od_esferas,$od_cilindros,$od_eje,$od_adicion,$oi_esferas,$oi_cilindros,$oi_eje,$oi_adicion,$tipo_lente,$color_varilla,$color_frente,$imagen,$edad,$usuario,$ocupacion,$avsc,$avfinal,$avsc_oi,$avfinal_oi,$telefono,$genero,$user){
 
     $conectar = parent::conexion();
     date_default_timezone_set('America/El_Salvador'); 
@@ -129,7 +129,7 @@ require_once("../config/conexion.php");
     $sql7 = "insert into acciones_orden values(null,?,?,?,?,?);";
     $sql7 = $conectar->prepare($sql7);
     $sql7->bindValue(1, $hoy);
-    $sql7->bindValue(2, $usuario);
+    $sql7->bindValue(2, $user);
     $sql7->bindValue(3, $correlativo_op);
     $sql7->bindValue(4, $accion);
     $sql7->bindValue(5, $accion);
@@ -555,7 +555,7 @@ public function ordenEnviarFechaLente($inicio,$fin,$lente){
     $conectar = parent::conexion();
     parent::set_names();
     date_default_timezone_set('America/El_Salvador'); $hoy = date("d-m-Y H:i:s");
-    $accion = "Envio laboratorio-print";
+    $accion = "Envio laboratorio - Imprimir";
     $arrayReset = array();
     $arrayReset = json_decode($_POST["array_restart_print"]);
     $usuario = "Andvas";
@@ -771,7 +771,7 @@ public function getAccionesOrden($codigo){
     $conectar = parent::conexion();
     parent::set_names();
 
-    $sql = "select u.nombres,u.codigo_emp,a.codigo,a.fecha_hora,a.accion,a.observaciones from usuarios as u inner join acciones_orden as a on u.id_usuario=a.usuario where a.codigo=?;";
+    $sql = "select u.nombres,u.codigo_emp,a.codigo,a.fecha,a.tipo_accion,a.observaciones from usuarios as u inner join acciones_orden as a on u.usuario=a.usuario where a.codigo=?;";
     $sql = $conectar->prepare($sql);
     $sql->bindValue(1, $codigo);
     $sql->execute();
