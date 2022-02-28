@@ -236,9 +236,9 @@ require_once("../config/conexion.php");
 
     //$tipo_accion == 'recibir_veteranos'? ($estado ='Recibido'; $accion = 'Ingreso'): ($estado='Entregado'; $accion='Entrega');
     if ($tipo_accion=='recibir_veteranos') {
-      $estado ='Recibido'; $accion = 'Ingreso';
+      $estado ='Recibido'; $accion = 'Ingreso INABVE';
     }elseif ($tipo_accion=='entregar_veteranos') {
-      $estado='Entregado'; $accion='Entrega';
+      $estado='Entregado'; $accion='Entrega INABVE';
     }
     
 
@@ -291,7 +291,7 @@ require_once("../config/conexion.php");
   public function listarOrdenesEntregadasVeteranos(){
        $conectar= parent::conexion();
     parent::set_names();
-    $sql = 'select o.paciente,o.dui,d.codigo_orden,a.fecha,a.hora,a.usuario,a.ubicacion,o.tipo_lente,d.id_detalle_accion from orden_lab as o inner join detalle_acciones_veteranos as d on  o.codigo=d.codigo_orden INNER join acciones_ordenes_veteranos as a on a.correlativo_accion=d.correlativo_accion where a.tipo_acccion="Entrega" and d.estado="Entregado";';
+    $sql = 'select o.paciente,o.dui,d.codigo_orden,a.fecha,a.hora,a.usuario,a.ubicacion,o.tipo_lente,d.id_detalle_accion from orden_lab as o inner join detalle_acciones_veteranos as d on  o.codigo=d.codigo_orden INNER join acciones_ordenes_veteranos as a on a.correlativo_accion=d.correlativo_accion where a.tipo_acccion="Entrega INABVE" and d.estado="Entregado";';
     $sql=$conectar->prepare($sql);
     $sql->execute();
     return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC); 

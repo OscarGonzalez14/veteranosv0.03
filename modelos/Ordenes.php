@@ -777,7 +777,19 @@ public function getAccionesOrden($codigo){
     $sql->execute();
     return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
 
-} 
+}
+
+public function getAccionesOrdenVet($codigo){
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    $sql = "select u.nombres,u.codigo_emp,a.codigo,a.fecha,a.tipo_accion,a.observaciones from usuarios as u inner join acciones_orden as a on u.usuario=a.usuario where a.codigo=? and (a.tipo_accion = 'Envio Lab' or a.tipo_accion = 'Digitación orden' or a.tipo_accion = 'Ingreso INABVE' OR a.tipo_accion='Entrega INABVE' or a.tipo_accion='Rectificacion');";
+    $sql = $conectar->prepare($sql);
+    $sql->bindValue(1, $codigo);
+    $sql->execute();
+    return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
+
+}
 
 /*-------------------LISTAR DETALLE RECTIFICACIONES ----------------*/
 public function getTablasRectificaciones($codigoOrden){
@@ -806,12 +818,12 @@ public function getTablasRectificaciones($codigoOrden){
       $est_aro = $cr["estado_aro"];
     }    
     $cont == 0 ? $titulo = "<b>ORDEN ORIGINAL</b>" : $titulo="RECTIFICACION";
-    $cont%2 == 0 ? $background = "#eaf7f8" : $background="";
+    $cont%2 == 0 ? $background = "" : $background="";
 
     $tabla .= "
-      <table width='100%'  class='table2' style='background:".$background."'>
+      <table width='100%'  class='table2' style='border: 2px solid #177694;box-shadow: 2px 3px 3px 3px #888888;'>
       <tr>
-      <td class='stilot1' colspan='100' style='text-align:center'><b>".$titulo."</b></td>
+      <td class='stilot1' colspan='100' style='text-align:center;background:#177694;color:white'><b>".$titulo."</b></td>
       </tr>
       <tr>
       <td class='stilot1' colspan='30' style='text-align:center'>".$key["codigo_orden"]."</td>
@@ -824,7 +836,7 @@ public function getTablasRectificaciones($codigoOrden){
         <td class='stilot1 encabezado' colspan='15'><b style='padding: 0px'>Edad:</b></td>
       </tr>
       <tr>
-        <td class='stilot1' colspan='65' style='text-transform:uppercase;font-size:10px'>".$key["paciente"]."</td>
+        <td class='stilot1' colspan='65' style='text-transform:uppercase;'>".$key["paciente"]."</td>
         <td class='stilot1' colspan='20'>".$key["dui"]."</td>
         <td class='stilot1' colspan='15'>".$key["edad"]."</td>
       </tr>
@@ -925,7 +937,7 @@ public function getDetOrdenActRec($codigoOrden){
    
     $tabla .= "
       <tr>
-      <td class='stilot1' colspan='100' style='text-align:center'><b>ORDEN ACTUAL</b></td>
+      <td class='stilot1' colspan='100' style='text-align:center;background:#13263b;color:white'><b>ORDEN ACTUAL</b></td>
       </tr>
       <tr>
       <td class='stilot1' colspan='30' style='text-align:center'>".$key["codigo"]."</td>
@@ -938,7 +950,7 @@ public function getDetOrdenActRec($codigoOrden){
         <td class='stilot1 encabezado' colspan='15'><b style='padding: 0px'>Edad:</b></td>
       </tr>
       <tr>
-        <td class='stilot1' colspan='65' style='text-transform:uppercase;font-size:10px'>".$key["paciente"]."</td>
+        <td class='stilot1' colspan='65' style='text-transform:uppercase;'>".$key["paciente"]."</td>
         <td class='stilot1' colspan='20'>".$key["dui"]."</td>
         <td class='stilot1' colspan='15'>".$key["edad"]."</td>
       </tr>
@@ -1017,7 +1029,15 @@ echo $tabla;
 
 }
 
+public function listar_rectificaciones(){
+  $conectar = parent::conexion();
+  parent::set_names();
 
+  $sql = 'select r.id_rectifi,r.codigo_rectifi,r.fecha,r.hora,r.usuario,d.paciente,d.codigo_orden,r.motivo from rectificacion as r inner join detalle_orden_rectificicacion as d on r.codigo_rectifi = d.codigo_recti order by r.id_rectifi DESC;';
+  $sql=$conectar->prepare($sql);
+  $sql->execute();
+  return $resulta = $sql->fetchAll(PDO::FETCH_ASSOC);
+}
 
 }//Fin de la Clase
 

@@ -7,7 +7,9 @@ function init(){
  get_ordenes_env_lab('0');
  get_ordenes_procesando();
  get_ordenes_por_enviar();
+ listar_rectificaciones();
  document.getElementById("btn-print-bc").style.display = "none";
+ 
 }
 
 function ocultar_btn_print_rec_ini(){
@@ -1487,6 +1489,49 @@ function listar_orden_act(codigoOrden){
   success:function(data){         
     $("#ordenes-actual").html(data);
   }
+  });
+}
+
+function listar_rectificaciones(){
+ //console.log(`inicio ${inicio} hasta ${hasta} lente ${lente}`);return false;
+  table_enviados = $('#data_rectificaciones').DataTable({      
+    "aProcessing": true,//Activamos el procesamiento del datatables
+    "aServerSide": true,//Paginación y filtrado realizados por el servidor
+    dom: 'frtip',//Definimos los elementos del control de tabla
+    //buttons: ['excelHtml5'],
+    "ajax":{
+      url:"../ajax/ordenes.php?op=listar_rectificaciones",
+      type : "POST",
+      dataType : "json",
+      error: function(e){
+      console.log(e.responseText);
+    },},
+    "bDestroy": true,
+    "responsive": true,
+    "bInfo":true,
+    "iDisplayLength":50,//Por cada 10 registros hace una paginación
+    "order": [[ 0, "desc" ]],//Ordenar (columna,orden
+      "language": { 
+      "sProcessing":     "Procesando...",       
+      "sLengthMenu":     "Mostrar _MENU_ registros",       
+      "sZeroRecords":    "No se encontraron resultados",       
+      "sEmptyTable":     "Ningún dato disponible en esta tabla",       
+      "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",       
+      "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",       
+      "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",       
+      "sInfoPostFix":    "",       
+      "sSearch":         "Buscar:",       
+      "sUrl":            "",       
+      "sInfoThousands":  ",",       
+      "sLoadingRecords": "Cargando...",       
+      "oPaginate": {       
+      "sFirst":"Primero","sLast":"Último","sNext":"Siguiente","sPrevious": "Anterior"       
+      },      
+      "oAria": {       
+        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",       
+        "sSortDescending": ": Activar para ordenar la columna de manera descendente"       
+      }
+    }, //cerrando language
   });
 }
 

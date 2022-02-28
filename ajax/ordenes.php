@@ -187,7 +187,8 @@ case 'get_ordenes_dig':
       $output['genero'] = $row['genero'];       
     
       }
-        echo json_encode($output);
+      
+      echo json_encode($output);
 
     break;
 
@@ -587,7 +588,12 @@ case 'listar_ordenes_enviar':
   //******************* GET HISTORIAL DE ORDEN ******************//
   case 'ver_historial_orden':
 
-  $historial = $ordenes->getAccionesOrden($_POST["codigo"]);
+  
+  if ($_POST["categoriaUser"]=='1') {
+    $historial = $ordenes->getAccionesOrden($_POST["codigo"]);
+  }elseif ($_POST["categoriaUser"]=='a' or $_POST["categoriaUser"]=='3') {
+    $historial = $ordenes->getAccionesOrdenVet($_POST["codigo"]);
+  }
   $data = Array();
   foreach ($historial as $k) {
     $sub_array["fecha_hora"] =  date("d-m-Y H:i:s", strtotime($k["fecha"]));
@@ -606,6 +612,30 @@ case 'listar_ordenes_enviar':
 
   case 'listar_det_orden_act':
     $ordenes->getDetOrdenActRec($_POST["codigoOrden"]); 
+  break;
+
+  case 'listar_rectificaciones':
+
+    $data= Array();
+    $datos = $ordenes->listar_rectificaciones();
+    foreach($datos as $row){
+      $sub_array = array();
+      $sub_array[] = $row["id_rectifi"];
+      $sub_array[] = $row["codigo_rectifi"];
+      $sub_array[] = $row["fecha"]." ".$row["hora"];
+      $sub_array[] = $row["usuario"];
+      $sub_array[] = $row["paciente"];
+      $sub_array[] = '<i class="fas fa-eye" aria-hidden="true" style="color:blue" onClick="detRecti(\''.$row["codigo_orden"].'\')"></i>';
+
+      $data[] = $sub_array;
+      }
+
+      $results = array(
+      "sEcho"=>1, //Información para el datatables
+      "iTotalRecords"=>count($data), //enviamos el total registros al datatable
+      "iTotalDisplayRecords"=>count($data), //enviamos el total registros a visualizar
+      "aaData"=>$data);
+      echo json_encode($results); 
   break;
 
 

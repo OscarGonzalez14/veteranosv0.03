@@ -28,6 +28,12 @@
                   <p>Gestionar ordenes</p>
                 </a>
               </li>
+            <li class="nav-item">
+              <a href="rectificaciones.php" class="nav-link">
+                <i class="far fa-circle nav-icon text-danger"></i>
+                  <p>Rectificaciones</p>
+                </a>
+              </li>
             </ul>  
             </li>
 
