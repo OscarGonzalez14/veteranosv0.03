@@ -587,8 +587,6 @@ case 'listar_ordenes_enviar':
   //******************* GET HISTORIAL DE ORDEN ******************//
   case 'ver_historial_orden':
 
-  
-
   $historial = $ordenes->getAccionesOrden($_POST["codigo"]);
   $data = Array();
   foreach ($historial as $k) {
@@ -600,7 +598,15 @@ case 'listar_ordenes_enviar':
   }
   echo json_encode($data);
   break;
+  
 
+  case 'listar_ordenes_rect':
+    $ordenes->getTablasRectificaciones($_POST["codigoOrden"]); 
+  break;
+
+  case 'listar_det_orden_act':
+    $ordenes->getDetOrdenActRec($_POST["codigoOrden"]); 
+  break;
 
 
 }

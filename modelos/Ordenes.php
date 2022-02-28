@@ -620,14 +620,14 @@ public function ordenEnviarFechaLente($inicio,$fin,$lente){
       if($cr->rowCount() == 0) {
 
       $accion = "Rectificacion";
-
+      $observaciones = '<i class="fa fa-eye" aria-hidden="true" style="color:blue" onClick="detRecti(\''.$codigoOrden.'\')"></i>';
       $sql7 = "insert into acciones_orden values(null,?,?,?,?,?);";
       $sql7 = $conectar->prepare($sql7);
       $sql7->bindValue(1, $hoy."  ".$hora);
       $sql7->bindValue(2, $usuario);
       $sql7->bindValue(3, $codigoOrden);
       $sql7->bindValue(4, $accion);
-      $sql7->bindValue(5, $accion);
+      $sql7->bindValue(5, $observaciones."<span>"." ".$motivo."</spa>");
       $sql7->execute();
 
       $sql = 'insert into rectificacion values(null,?,?,?,?,?,?);';
@@ -777,7 +777,247 @@ public function getAccionesOrden($codigo){
     $sql->execute();
     return $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
 
-}  
+} 
+
+/*-------------------LISTAR DETALLE RECTIFICACIONES ----------------*/
+public function getTablasRectificaciones($codigoOrden){
+
+  $conectar = parent::conexion();
+  parent::set_names();
+
+  $sql = "select o.id_det_recti,o.codigo_recti,o.fecha,o.paciente,o.dui,o.edad,rx.od_esferas,rx.od_cilindros,rx.od_eje,rx.od_adicion,rx.oi_esferas,rx.oi_cilindros,rx.oi_eje,rx.oi_adicion,o.pupilar_od,o.pupilar_oi,o.lente_od,o.lente_oi,o.pupilar_od,o.pupilar_oi,o.lente_od,o.lente_oi,o.avsc,o.avfinal,o.modelo_aro,o.marca_aro,o.horizontal_aro,o.vertical_aro,o.puente_aro,o.tipo_lente,o.codigo_orden from detalle_orden_rectificicacion as o inner join rx_det_orden_recti as rx on o.codigo_orden=rx.codigo where o.codigo_orden=? GROUP BY o.id_det_recti ORDER by o.id_det_recti ASC;;";
+  $sql = $conectar->prepare($sql);
+  $sql->bindValue(1, $codigoOrden);
+  $sql->execute();
+  $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
+  $tabla = "";
+  $cont = 0; 
+  foreach ($resultado as $key) {
+    $correlativo_rc = $key["codigo_recti"];
+
+    $sql2 = "select *from rectificacion where codigo_rectifi=?;";
+    $sql2 = $conectar->prepare($sql2);
+    $sql2->bindValue(1, $correlativo_rc);
+    $sql2->execute();
+    $correlativo=$sql2->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($correlativo as $cr) {
+      $motivo = $cr["motivo"];
+      $est_aro = $cr["estado_aro"];
+    }    
+    $cont == 0 ? $titulo = "<b>ORDEN ORIGINAL</b>" : $titulo="RECTIFICACION";
+    $cont%2 == 0 ? $background = "#eaf7f8" : $background="";
+
+    $tabla .= "
+      <table width='100%'  class='table2' style='background:".$background."'>
+      <tr>
+      <td class='stilot1' colspan='100' style='text-align:center'><b>".$titulo."</b></td>
+      </tr>
+      <tr>
+      <td class='stilot1' colspan='30' style='text-align:center'>".$key["codigo_orden"]."</td>
+      <td class='stilot1' colspan='30' style='text-align:center'><b>Lente:</b> ".$key["tipo_lente"]."</td>
+      <td class='stilot1' colspan='40' style='text-align:center'><b>Fecha</b> ".date("d-m-Y",strtotime($key["fecha"]))."</td>
+      </tr>
+            <tr style='height: 14px'>
+        <td class='stilot1 encabezado' colspan='65'><b style='padding: 0px'>Paciente:</b></td>
+        <td class='stilot1 encabezado' colspan='20'><b style='padding: 0px'>DUI</b></td>
+        <td class='stilot1 encabezado' colspan='15'><b style='padding: 0px'>Edad:</b></td>
+      </tr>
+      <tr>
+        <td class='stilot1' colspan='65' style='text-transform:uppercase;font-size:10px'>".$key["paciente"]."</td>
+        <td class='stilot1' colspan='20'>".$key["dui"]."</td>
+        <td class='stilot1' colspan='15'>".$key["edad"]."</td>
+      </tr>
+      <tr>
+        <td colspan='100' class='stilot1 encabezado' style='text-align: center'><b>Rx final</b></td>
+      </tr>
+      <tr>
+      <th style='text-align: center;' colspan='20' class='stilot1'><b>OJO</b></th>
+        <th style='text-align: center;' colspan='20' class='stilot1'><b>Esfera</b></th>
+        <th style='text-align: center;' colspan='20' class='stilot1'><b>Cilindro</b></th>
+        <th style='text-align: center;' colspan='20' class='stilot1'><b>Eje</b></th>
+        <th style='text-align: center;' colspan='20' class='stilot1'><b>Adición</b></th>
+      </tr>
+      <tr>
+        <td colspan='20' class='stilot1'><b>OD</b></td>
+        <td colspan='20' class='stilot1'>".$key["od_esferas"]."</td>
+        <td colspan='20' class='stilot1'>".$key["od_cilindros"]."</td>
+        <td colspan='20' class='stilot1'>".$key["od_eje"]."</td>
+        <td colspan='20' class='stilot1'>".$key["od_adicion"]."</td>
+      </tr>
+    <tr>
+      <td colspan='20' class='stilot1'><b>OI</b></td>
+      <td colspan='20' class='stilot1'>".$key["oi_esferas"]."</td>
+      <td colspan='20' class='stilot1'>".$key["oi_cilindros"]."</td>
+      <td colspan='20' class='stilot1'>".$key["oi_eje"]."</td>
+      <td colspan='20' class='stilot1'>".$key["oi_adicion"]."</td>
+    </tr>
+    <tr>
+    <td colspan='30' class='stilot1 encabezado' style='height:10px'>Dist. Pupilar</td>
+    <td colspan='30' class='stilot1 encabezado' style='height:10px'>Altura de lente</td>
+    <td colspan='40' class='stilot1 encabezado' style='height:10px'>Agudeza visual</td>
+    </tr>
+    
+    <tr>
+      <td colspan='15' class='stilot1'><b>OD</b></td>
+      <td colspan='15' class='stilot1'><b>OI</b></td>
+      <td colspan='15' class='stilot1'><b>OD</b></td>
+      <td colspan='15' class='stilot1'><b>OI</b></td>
+      <td colspan='20' class='stilot1'><b>AVsc</b></td>
+      <td colspan='20' class='stilot1'><b>AVfinal</b></td>
+    </tr>
+    
+    <tr>
+      <td colspan='15' class='stilot1'>".$key["pupilar_od"]." mm</td>
+      <td colspan='15' class='stilot1'>".$key["pupilar_oi"]." mm</td>
+      <td colspan='15' class='stilot1'>".$key["lente_od"]." mm</td>
+      <td colspan='15' class='stilot1'>".$key["lente_oi"]." mm</td>
+      <td colspan='20' class='stilot1'>".$key["avsc"]."</td>
+      <td colspan='20' class='stilot1'>".$key["avfinal"]."</td>
+    </tr>
+    <tr>
+      <td colspan='100' class='stilot1 encabezado'><b>ARO</b></td>
+    </tr>
+    
+    <tr>
+      <td colspan='15' class='stilot1'><b>Mod.</b></td>
+      <td colspan='30' class='stilot1'><b>Marca</b></td>
+      <td colspan='15' class='stilot1'><b>Horiz.</b></td>
+      <td colspan='20' class='stilot1'><b>Vertical</b></td>
+      <td colspan='20' class='stilot1'><b>Puente</b></td>
+    </tr>
+    <tr>
+      <td colspan='15' class='stilot1'>".$key["modelo_aro"]."</td>
+      <td colspan='30' class='stilot1' style='font-size:10px'>".$key["marca_aro"]."</td>
+      <td colspan='15' class='stilot1'>".$key["horizontal_aro"]."</td>
+      <td colspan='20' class='stilot1'>".$key["vertical_aro"]."</td>
+      <td colspan='20' class='stilot1'>".$key["puente_aro"]."</td>
+    </tr>
+
+    <tr>
+      <td colspan='100' class='stilot1' style='text-align: left'><b>Motivo: </b>".$motivo."</td>     
+    </tr>
+    <tr> <td colspan='100' class='stilot1' style='text-align: left'><b>Estado aro: </b>".$est_aro."</td></tr>
+    </table><br>
+    ";
+    $cont++;
+
+  }
+
+  
+echo $tabla;
+
+}
+
+public function getDetOrdenActRec($codigoOrden){
+
+  $conectar = parent::conexion();
+  parent::set_names();
+
+  $sql = "select o.fecha,o.paciente,o.dui,o.edad,rx.od_esferas,rx.od_cilindros,rx.od_eje,rx.od_adicion,rx.oi_esferas,rx.oi_cilindros,rx.oi_eje,rx.oi_adicion,o.pupilar_od,o.pupilar_oi,o.lente_od,o.lente_oi,o.pupilar_od,o.pupilar_oi,o.lente_od,o.lente_oi,o.avsc,o.avfinal,o.modelo_aro,o.marca_aro,o.horizontal_aro,o.vertical_aro,o.puente_aro,o.tipo_lente,o.codigo from orden_lab as o inner join rx_orden_lab as rx on o.codigo=rx.codigo where o.codigo=?;";
+  $sql = $conectar->prepare($sql);
+  $sql->bindValue(1, $codigoOrden);
+  $sql->execute();
+  $resultado=$sql->fetchAll(PDO::FETCH_ASSOC);
+  $tabla = "";
+  
+  foreach ($resultado as $key) {
+   
+    $tabla .= "
+      <tr>
+      <td class='stilot1' colspan='100' style='text-align:center'><b>ORDEN ACTUAL</b></td>
+      </tr>
+      <tr>
+      <td class='stilot1' colspan='30' style='text-align:center'>".$key["codigo"]."</td>
+      <td class='stilot1' colspan='30' style='text-align:center'><b>Lente:</b> ".$key["tipo_lente"]."</td>
+      <td class='stilot1' colspan='40' style='text-align:center'><b>Fecha</b> ".date("d-m-Y",strtotime($key["fecha"]))."</td>
+      </tr>
+            <tr style='height: 14px'>
+        <td class='stilot1 encabezado' colspan='65'><b style='padding: 0px'>Paciente:</b></td>
+        <td class='stilot1 encabezado' colspan='20'><b style='padding: 0px'>DUI</b></td>
+        <td class='stilot1 encabezado' colspan='15'><b style='padding: 0px'>Edad:</b></td>
+      </tr>
+      <tr>
+        <td class='stilot1' colspan='65' style='text-transform:uppercase;font-size:10px'>".$key["paciente"]."</td>
+        <td class='stilot1' colspan='20'>".$key["dui"]."</td>
+        <td class='stilot1' colspan='15'>".$key["edad"]."</td>
+      </tr>
+      <tr>
+        <td colspan='100' class='stilot1 encabezado' style='text-align: center'><b>Rx final</b></td>
+      </tr>
+      <tr>
+      <th style='text-align: center;' colspan='20' class='stilot1'><b>OJO</b></th>
+        <th style='text-align: center;' colspan='20' class='stilot1'><b>Esfera</b></th>
+        <th style='text-align: center;' colspan='20' class='stilot1'><b>Cilindro</b></th>
+        <th style='text-align: center;' colspan='20' class='stilot1'><b>Eje</b></th>
+        <th style='text-align: center;' colspan='20' class='stilot1'><b>Adición</b></th>
+      </tr>
+      <tr>
+        <td colspan='20' class='stilot1'><b>OD</b></td>
+        <td colspan='20' class='stilot1'>".$key["od_esferas"]."</td>
+        <td colspan='20' class='stilot1'>".$key["od_cilindros"]."</td>
+        <td colspan='20' class='stilot1'>".$key["od_eje"]."</td>
+        <td colspan='20' class='stilot1'>".$key["od_adicion"]."</td>
+      </tr>
+    <tr>
+      <td colspan='20' class='stilot1'><b>OI</b></td>
+      <td colspan='20' class='stilot1'>".$key["oi_esferas"]."</td>
+      <td colspan='20' class='stilot1'>".$key["oi_cilindros"]."</td>
+      <td colspan='20' class='stilot1'>".$key["oi_eje"]."</td>
+      <td colspan='20' class='stilot1'>".$key["oi_adicion"]."</td>
+    </tr>
+    <tr>
+    <td colspan='30' class='stilot1 encabezado' style='height:10px'>Dist. Pupilar</td>
+    <td colspan='30' class='stilot1 encabezado' style='height:10px'>Altura de lente</td>
+    <td colspan='40' class='stilot1 encabezado' style='height:10px'>Agudeza visual</td>
+    </tr>
+    
+    <tr>
+      <td colspan='15' class='stilot1'><b>OD</b></td>
+      <td colspan='15' class='stilot1'><b>OI</b></td>
+      <td colspan='15' class='stilot1'><b>OD</b></td>
+      <td colspan='15' class='stilot1'><b>OI</b></td>
+      <td colspan='20' class='stilot1'><b>AVsc</b></td>
+      <td colspan='20' class='stilot1'><b>AVfinal</b></td>
+    </tr>
+    
+    <tr>
+      <td colspan='15' class='stilot1'>".$key["pupilar_od"]." mm</td>
+      <td colspan='15' class='stilot1'>".$key["pupilar_oi"]." mm</td>
+      <td colspan='15' class='stilot1'>".$key["lente_od"]." mm</td>
+      <td colspan='15' class='stilot1'>".$key["lente_oi"]." mm</td>
+      <td colspan='20' class='stilot1'>".$key["avsc"]."</td>
+      <td colspan='20' class='stilot1'>".$key["avfinal"]."</td>
+    </tr>
+    <tr>
+      <td colspan='100' class='stilot1 encabezado'><b>ARO</b></td>
+    </tr>
+    
+    <tr>
+      <td colspan='15' class='stilot1'><b>Mod.</b></td>
+      <td colspan='30' class='stilot1'><b>Marca</b></td>
+      <td colspan='15' class='stilot1'><b>Horiz.</b></td>
+      <td colspan='20' class='stilot1'><b>Vertical</b></td>
+      <td colspan='20' class='stilot1'><b>Puente</b></td>
+    </tr>
+    <tr>
+      <td colspan='15' class='stilot1'>".$key["modelo_aro"]."</td>
+      <td colspan='30' class='stilot1' style='font-size:10px'>".$key["marca_aro"]."</td>
+      <td colspan='15' class='stilot1'>".$key["horizontal_aro"]."</td>
+      <td colspan='20' class='stilot1'>".$key["vertical_aro"]."</td>
+      <td colspan='20' class='stilot1'>".$key["puente_aro"]."</td>
+    </tr>
+
+    ";
+
+  }
+
+  
+echo $tabla;
+
+}
+
+
 
 }//Fin de la Clase
 

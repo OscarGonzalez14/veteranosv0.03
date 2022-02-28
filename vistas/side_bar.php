@@ -1,5 +1,6 @@
  <?php
  $cat_usuario = $_SESSION["categoria"];
+ require_once('../modales/modal_det_rectificaciones.php');
  ?>
  <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a class="brand-link">

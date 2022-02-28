@@ -1405,7 +1405,12 @@ function registrarRectificacion(){
   let usuario = $("#usuario").val();
   let codigo =  $("#correlativo_op").html();
   let correlativo = $("#correlativo_rectificacion").html();
-
+  
+  if (motivo=='') {
+      Swal.fire({position: 'top-center',icon: 'error',
+        title: 'Debe especificar rl motivo de la rectificacion',showConfirmButton: true,timer: 2500
+      }); return false;
+  }
 
   $.ajax({
     url:"../ajax/ordenes.php?op=registrar_rectificacion",
@@ -1452,6 +1457,39 @@ function getCorrelativoRectificacion(){
   }
   });
 }
+
+function detRecti(codigoOrden){
+
+ $('#modal_detalle_recti').modal();
+ listar_orden_orig_mods(codigoOrden);
+ }
+
+function listar_orden_orig_mods(codigoOrden){
+  $.ajax({
+  url:"../ajax/ordenes.php?op=listar_ordenes_rect",
+  method:"POST",
+  data:{codigoOrden:codigoOrden}, 
+  cache:false,
+  success:function(data){         
+    $("#ordenes-rectificadas").html(data);
+  }
+  });
+
+  listar_orden_act(codigoOrden)
+}
+
+function listar_orden_act(codigoOrden){
+  $.ajax({
+  url:"../ajax/ordenes.php?op=listar_det_orden_act",
+  method:"POST",
+  data:{codigoOrden:codigoOrden}, 
+  cache:false,
+  success:function(data){         
+    $("#ordenes-actual").html(data);
+  }
+  });
+}
+
 
 init();
 

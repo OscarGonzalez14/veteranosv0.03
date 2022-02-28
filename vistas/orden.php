@@ -42,10 +42,7 @@ $categoria_usuario = $_SESSION["categoria"];
       <input type="hidden" name="id_usuario" id="id_usuario" value="<?php echo $_SESSION["id_usuario"];?>"/>
       <input type="hidden" name="usuario" id="usuario" value="<?php echo $_SESSION["usuario"];?>"/>
       <input type="hidden" name="categoria" id="get_categoria" value="<?php echo $_SESSION["categoria"];?>"/>
-      <div style="border-top: 0px">
-      <!--<a class="btn btn-app bg-info btn-sm btn-flat" data-toggle="modal" data-target="#nueva_orden_lab" onClick='get_numero_orden();' style="border-radius: 5px;margin:2px;">
-            <i class="fas fa-glasses"></i> Crear orden
-        </a>-->
+      <div style="border-top: 0px">      
       </div>
       <button class="btn btn-outline-primary btn-sm btn-flat" data-toggle="modal" data-target="#nueva_orden_lab" onClick='get_numero_orden();' id="order_new"><i class="fa fa-glasses" style="margin-top: 2px"> Crear Orden</i></button>
       <div class="row">
