@@ -1437,6 +1437,7 @@ function registrarRectificacion(){
 }
 
 const btn_recti = document.getElementById('btn_rectificar');
+
 btn_recti.addEventListener("click", () => {
   getCorrelativoRectificacion(); 
   document.getElementById("motivo-rct").value="";
@@ -1493,7 +1494,6 @@ function listar_orden_act(codigoOrden){
 }
 
 function listar_rectificaciones(){
- //console.log(`inicio ${inicio} hasta ${hasta} lente ${lente}`);return false;
   table_enviados = $('#data_rectificaciones').DataTable({      
     "aProcessing": true,//Activamos el procesamiento del datatables
     "aServerSide": true,//Paginación y filtrado realizados por el servidor

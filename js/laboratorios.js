@@ -772,7 +772,7 @@ function input_focus_clearb(){
 function downloadExcelEntregas(title,fecha){
   let titulo = fecha+"_"+title;
   let tablaExport = document.getElementById("tabla_acciones_veterans");
-  //console.log(tablaExport);
+
   if(tablaExport == null || tablaExport == undefined ){
     alerts_productos("warning", "Debe desplegar la tabla para poder ser descargada");
     return false;

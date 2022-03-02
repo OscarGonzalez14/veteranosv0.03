@@ -299,5 +299,4 @@ require_once("../config/conexion.php");
 
 }
 
-/***************** REPORTERIA LABORATORIO **********************************
-select o.paciente,o.estado,o.tipo_lente,o.fecha as fechaexp,a.fecha,a.tipo_accion,a.observaciones from orden_lab as o inner join acciones_orden as a on a.codigo=o.codigo where a.fecha like "%06-12-2021%"*/
+

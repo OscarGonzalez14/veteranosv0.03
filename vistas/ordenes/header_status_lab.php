@@ -18,4 +18,9 @@
     <span class="badge bg-success" id="alert_recibidos_ord"></span>
     <i class="fas fa-location-arrow" style="color: #5cb85c"></i> ENVIADAS
   </a>
+
+  <a href="ordenes_envio.php" class="btn btn-app" style="color: black;border: solid #5bc0de 1px;">
+    <span class="badge bg-success" id="alert_recibidos_ord"></span>
+    <i class="fas fa-file"></i> ORDENES DE ENVIOS
+  </a>
 </div>
