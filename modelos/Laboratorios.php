@@ -143,7 +143,7 @@ require_once("../config/conexion.php");
   public function get_ordeOrdenesFinalizadasEnviar(){
     $conectar= parent::conexion();
     parent::set_names();
-    $sql= "select o.id_orden,o.codigo,a.fecha,o.paciente,o.tipo_lente,o.img from orden_lab as o INNER JOIN acciones_orden as a on a.codigo=o.codigo where o.estado_aro = '4' and a.tipo_accion='Envio Lab';";
+    $sql= "select o.id_orden,o.codigo,a.fecha,o.paciente,o.tipo_lente,o.img from orden_lab as o INNER JOIN acciones_orden as a on a.codigo=o.codigo where o.estado_aro = '4' and a.tipo_accion='Envio Lab' group by a.codigo;";
     $sql=$conectar->prepare($sql);
     $sql->execute();
     return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);

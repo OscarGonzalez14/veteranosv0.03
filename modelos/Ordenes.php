@@ -3,8 +3,7 @@
 require_once("../config/conexion.php");  
 
   class Ordenes extends Conectar{
-/*SELECT o.paciente,o.fecha_creacion,s.nombre,s.direccion,op.nombre from orden as o inner join sucursal_optica as s on o.id_sucursal = s.id_sucursal INNER join optica as op on s.id_optica= op.id_optica*/
-    ///////////GET SUCURSALES ///////////
+
     public function get_opticas(){
       $conectar=parent::conexion();
       parent::set_names();
