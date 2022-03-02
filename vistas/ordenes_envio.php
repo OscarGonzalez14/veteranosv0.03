@@ -50,13 +50,14 @@ date_default_timezone_set('America/El_Salvador'); $hoy = date("d-m-Y H-i-s");
       <div class="row">
         <div class="col-sm-12"><h5 style="text-align: center">ORDENES ENVIADAS</h5></div>
       </div>
-        <table width="100%" class="table-hover table-bordered" id="ordenes_finalizadas_lab"  data-order='[[ 0, "desc" ]]'> 
+        <table width="100%" class="table-hover table-bordered" id="ordenes-de-envio"  data-order='[[ 0, "desc" ]]'> 
               
          <thead class="style_th bg-dark" style="color: white">
            <th>ID</th>
            <th>Correlativo</th>
            <th>Fecha Envio</th>
-           <th>Cant. Ordenes</th>
+           <th>Usuario</th>
+           <th>Cant.</th>
            <th>Imprimir</th> 
          </thead>
          <tbody class="style_th"></tbody>

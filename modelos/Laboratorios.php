@@ -297,6 +297,17 @@ require_once("../config/conexion.php");
     return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC); 
   }
 
+  public function listarOrdenesEnvio(){
+  $conectar= parent::conexion();
+  parent::set_names();
+
+  $sql = 'select a.id_orden_rec,a.correlativo_accion,a.fecha,a.hora,a.usuario,COUNT(d.codigo_orden) as cant,a.usuario from acciones_ordenes_veteranos as a INNER JOIN detalle_acciones_veteranos as d on a.correlativo_accion=d.correlativo_accion GROUP by a.correlativo_accion order by a.id_orden_rec DESC;';
+  $sql=$conectar->prepare($sql);
+  $sql->execute();
+  return $resultado= $sql->fetchAll(PDO::FETCH_ASSOC);
+
+}
+
 }
 
 

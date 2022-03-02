@@ -244,4 +244,35 @@ case 'get_ordenes_pendientes_lab':
       echo json_encode($results);
     break;
 
+    case 'listar_ordenes_de_envio':
+    $data = Array();
+    $i=0;
+    $datos = $ordenes->listarOrdenesEnvio();
+    foreach ($datos as $row) { 
+    $sub_array = array();
+
+    $sub_array[] = $row["id_orden_rec"];
+    $sub_array[] = $row["correlativo_accion"];
+    $sub_array[] = date("d-m-Y",strtotime($row["fecha"]))." ".$row["hora"];
+    $sub_array[] = $row["usuario"];
+    $sub_array[] = $row["cant"]." ordenes";
+    $sub_array[] = '<form action="imprimirDespachoLabPdf.php" method="POST" target="_blank">
+    <input type="hidden" name="correlativos_acc" value="'.$row['correlativo_accion'].'">
+    <button type="submit"  class="btn btn-sm" style="background:#6d0202;color:white"><i class="fas fa-file-pdf"></i></button>
+    </form>';  
+            
+                                          
+    $data[] = $sub_array;
+    }
+    
+    $results = array(
+        "sEcho"=>1, //Información para el datatables
+        "iTotalRecords"=>count($data), //enviamos el total registros al datatable
+        "iTotalDisplayRecords"=>count($data), //enviamos el total registros a visualizar
+        "aaData"=>$data);
+      echo json_encode($results);
+    break;
+
+
+
 }

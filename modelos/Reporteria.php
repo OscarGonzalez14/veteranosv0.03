@@ -46,6 +46,8 @@ $conectar= parent::conexion();
 }
 
 
+
+
 }///FIN DE LA CLASE
 
 
